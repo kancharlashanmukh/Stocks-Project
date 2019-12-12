@@ -4,77 +4,124 @@ import json
 import psycopg2
 app = Flask(__name__)
 
-# host = "myserverkyc.postgres.database.azure.com"
-# dbname = "kyc"
-# user = "kycadmin@myserverkyc"
-# password = "Shan12345"
-# sslmode = "require"
+host = "myserverkyc.postgres.database.azure.com"
+dbname = "kyc"
+user = "kycadmin@myserverkyc"
+password = "Shan12345"
+sslmode = "require"
 
-# # Construct connection string
-# conn_string = "host={0} user={1} dbname={2} password={3} sslmode={4}".format(host, user, dbname, password, sslmode)
-# conn = psycopg2.connect(conn_string) 
-# print("Connection established")
-# cursor = conn.cursor()
+# Construct connection string
+conn_string = "host={0} user={1} dbname={2} password={3} sslmode={4}".format(host, user, dbname, password, sslmode)
+conn = psycopg2.connect(conn_string) 
+print("Connection established")
+cursor = conn.cursor()
+cursor1 = conn.cursor()
+cursor2 = conn.cursor()
+cursor3 = conn.cursor()
 @app.route("/")
 def hello():
-   return render_template('home.html')
+   return render_template('index.html')
 
-@app.route("/check",methods = ['POST'])
+@app.route('/check',methods = ['POST'])
 def check():
-   cmp1 = request.form['cmp']
-   print(cmp1) 
-   return render_template('home.html',cmp1=cmp1)
-# @app.route('/check',methods = ['POST'])
-# def check():
-#     cmp1 = request.form['cmp']
-#     data=requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+cmp1+'&outputsize=compact&apikey=X81QUECTPQC802ES')
-#     data=data.json()
-
-#     dat=(data['Time Series (Daily)'])
-#     keys = (dat.keys())
-#     cursor.execute("select csymbol from stock where csymbol like '"+cmp1+"' fetch first row only")
-#     rows=cursor.fetchone()
-#     print(rows)
+    cmp1 = request.form['cmp1']
+    cmp2 = request.form['cmp2']
+    print(cmp1+" "+cmp2)
+    data=requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+cmp1+'&outputsize=compact&apikey=X81QUECTPQC802ES')
+    data=data.json()
+    dat=(data['Time Series (Daily)'])
+    keys = (dat.keys())
+    cursor.execute("select csymbol from stock where csymbol like '"+cmp1+"' fetch first row only")
+    rows=cursor.fetchone()
+    print(rows)
         
-#     if rows is None:
-#         for k in keys:
-#             print(k+" "+ dat[k]['2. high'] + " " + dat[k]['5. volume'])
-#             ss=str(k)
-#             print(ss)
-#             open1=dat[k]['1. open']
-#             high= dat[k]['2. high']
-#             low=dat[k]['3. low']
-#             close=dat[k]['4. close']      
-#             cursor.execute("INSERT INTO public.stock(open, close, high, low, cname, csymbol, date) VALUES (%s, %s,%s, %s,%s, %s,%s);", (open1,close,high,low,"Apple",cmp1,k))
-#             print("inserted")
-#             conn.commit()   
+    if rows is None:
+        for k in keys:
+            open1=dat[k]['1. open']
+            high= dat[k]['2. high']
+            low=dat[k]['3. low']
+            close=dat[k]['4. close']      
+            cursor.execute("INSERT INTO public.stock(open, close, high, low, cname, csymbol, date) VALUES (%s, %s,%s, %s,%s, %s,%s);", (open1,close,high,low,"Apple",cmp1,k))
+            print("inserted")
+            conn.commit()   
                 
-#     else:
-#         for k in keys:
-#             print(k+" "+ dat[k]['2. high'] + " " + dat[k]['5. volume'])
-#             open1=dat[k]['1. open']
-#             high= dat[k]['2. high']
-#             low=dat[k]['3. low']
-#             close=dat[k]['4. close']
-#             sql=("UPDATE public.stock SET open="+open1+", high="+high+",close="+close+", low="+low+" WHERE date='"+k+"' and csymbol='"+cmp1+"';")
-#             print(sql)        
-#             cursor.execute(sql)
-#             print("row updated")
-#             break
-#     cursor.execute("select * from stock where csymbol like 'AAPL' fetch first row only")
-#     rows=cursor.fetchone()
-#     print(rows)
-#     # print("open-------"+str(rows[0]))
-#     # print("high-------"+str(rows[0]))
-#     # print("low-------"+str(rows[0]))
-#     # print("close-------"+str(rows[0]))
-   
-#     conn.commit()
+    else:
+        for k in keys:
+            open1=dat[k]['1. open']
+            high= dat[k]['2. high']
+            low=dat[k]['3. low']
+            close=dat[k]['4. close']
+            sql=("UPDATE public.stock SET open="+open1+", high="+high+",close="+close+", low="+low+" WHERE date='"+k+"' and csymbol='"+cmp1+"';")
+            print(sql)        
+            cursor.execute(sql)
+            print("row updated")
+            break
+    cursor.execute("select * from stock where csymbol like '"+cmp1+"' fetch first row only")
+    rows=cursor.fetchone()
     
-#     msg="hello"
-#     return render_template("index.html",msg = msg, open=str(rows[0]),high=str(rows[1]),low=str(rows[2]),close=str(rows[3]))
+    cursor1.execute("select open,close,to_char(date,'YYYY-MM-DD') from stock where csymbol like '"+cmp1+"' order by date desc limit 5")
+    chartrows=cursor1.fetchall()
+    openlist=[]
+    closelist=[]
+    datelist=[]
+    for chr in chartrows:
+        openlist.append(chr[0])
+        closelist.append(chr[1])
+        datelist.append(chr[2])
+   
+    
+    conn.commit()
+    data1=requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+cmp2+'&outputsize=compact&apikey=X81QUECTPQC802ES')
+    data1=data1.json()
+    
+
+    dat1=(data1['Time Series (Daily)'])
+    print(dat1)
+    keys1 = (dat1.keys())
+    print(keys1)
+    cursor3.execute("select csymbol from stock where csymbol like '"+cmp2+"' fetch first row only")
+    rows1=cursor3.fetchone()
+    print(rows1)
+        
+    if rows1 is None:
+        for k1 in keys1:
+            open1=dat1[k1]['1. open']
+            high= dat1[k1]['2. high']
+            low=dat1[k1]['3. low']
+            close=dat1[k1]['4. close']      
+            cursor.execute("INSERT INTO public.stock(open, close, high, low, cname, csymbol, date) VALUES (%s, %s,%s, %s,%s, %s,%s);", (open1,close,high,low,"Apple",cmp2,k1))
+            print("inserted")
+            conn.commit()   
+                
+    else:
+        for k1 in keys1:
+            copen1=dat[k1]['1. open']
+            chigh= dat[k1]['2. high']
+            clow=dat[k1]['3. low']
+            cclose=dat[k1]['4. close']
+            sql=("UPDATE public.stock SET open="+copen1+", high="+chigh+",close="+cclose+", low="+clow+" WHERE date='"+k1+"' and csymbol='"+cmp2+"';")
+            print(sql)        
+            cursor.execute(sql)
+            print("row updated")
+            break
+    cursor.execute("select * from stock where csymbol like '"+cmp2+"' fetch first row only")
+    rows1=cursor.fetchone()
+    
+    cursor2.execute("select open,close,to_char(date,'YYYY-MM-DD') from stock where csymbol like '"+cmp2+"' order by date desc limit 5")
+    chartrows1=cursor2.fetchall()
+    copenlist=[]
+    ccloselist=[]
+    cdatelist=[]
+    for chr1 in chartrows1:
+        copenlist.append(chr1[0])
+        ccloselist.append(chr1[1])
+        cdatelist.append(chr1[2])
+
+    conn.commit()
+    
+    return render_template("index.html",open=str(rows[0]),close=str(rows[1]),high=str(rows[2]),low=str(rows[3]),cname=str(rows[4]),csymbol=str(rows[5]),openlist=openlist,closelist=closelist,open1=str(rows1[0]),close1=str(rows1[1]),high1=str(rows1[2]),low1=str(rows1[3]),cname1=str(rows1[4]),csymbol1=str(rows1[5]),copenlist=copenlist,ccloselist=ccloselist)
+# 
 
 
-
-# if __name__ == '__main__':
-#     app.run()
+if __name__ == '__main__':
+    app.run()
