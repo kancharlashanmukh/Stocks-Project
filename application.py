@@ -2,7 +2,6 @@ from flask import Flask,render_template, request
 import requests
 import json
 import psycopg2
-import os
 app = Flask(__name__)
 
 # host = "myserverkyc.postgres.database.azure.com"
@@ -15,7 +14,7 @@ app = Flask(__name__)
 # conn_string = "host={0} user={1} dbname={2} password={3} sslmode={4}".format(host, user, dbname, password, sslmode)
 # conn = psycopg2.connect(conn_string) 
 
-DATABASE_URL = os.environ['postgres://noxthjmjrdzasn:76ff1ab5fd7f09c73f6fe82ee4a7a2b5fa8920f75f3ef32679a1186ea743f359@ec2-107-21-122-38.compute-1.amazonaws.com:5432/defdshlvvo279k']
+DATABASE_URL =  'postgres://noxthjmjrdzasn:76ff1ab5fd7f09c73f6fe82ee4a7a2b5fa8920f75f3ef32679a1186ea743f359@ec2-107-21-122-38.compute-1.amazonaws.com:5432/defdshlvvo279k'
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 print("Connection established")
