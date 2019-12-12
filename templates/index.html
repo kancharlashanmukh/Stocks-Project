@@ -135,26 +135,44 @@ tr:nth-child(even) {
 				<input name="GO" type="submit">
 				<br>
 			</form>
-		
-		
-			<h2>Real Time Stock</h2>
-					<table>
+			<!-- <div  class="custom-select" style="width:200px;">
+			<form action="{{ url_for('check') }}" method="POST" onsubmit="showTable();">
+				
+					<select name="cmp1">
+					   <option value="MSFT">Microsoft</option>
+					   <option value="AAPL">APPLE</option>
+					   <option value="TSLA">TESLA</option>
+					   <option value="BMW">BMW</option>
+					 </select>
+					 <select name="cmp2">
+							<option value="MSFT">Microsoft</option>
+							<option value="AAPL">APPLE</option>
+							<option value="TSLA">TESLA</option>
+							<option value="BMW">BMW</option>
+						  </select>
+					<input name="GO" type="submit">
+					
+				 </form>
+				</div> -->
+			
+					<table id="mytable">
+						
 					  <tr>
-						<th>Company</th>
+						<th>Company Symbol</th>
 						<th>OPEN</th>
 						<th>HIGH</th>
 						<th>LOW</th>
 						<th>CLOSE</th>
 					  </tr>
 					  <tr>
-						<td>{{cname}}</td>
+						<td>{{csymbol}}</td>
 						<td>{{open}}</td>
 						<td>{{high}}</td>
 						<td>{{low}}</td>
 						<td>{{close}}</td>
 					  </tr>
 					  <tr>
-						<td>{{cname1}}</td>
+						<td>{{csymbol1}}</td>
 						<td>{{open1}}</td>
 						<td>{{high1}}</td>
 						<td>{{low1}}</td>
@@ -203,10 +221,16 @@ tr:nth-child(even) {
 			document.getElementById(pageName).style.display = "block";
 			elmnt.style.backgroundColor = color;
 		}
-		function showTable() {
+		var boo=eval({{boo}})
+		if(boo==1){
 			document.getElementById('mytable').style.display = 'block';
-			
+		}else{
+			document.getElementById('mytable').style.display = 'none';
 		}
+		// function showTable() {
+		// 	document.getElementById('mytable').style.display = 'block';
+			
+		// }
 		// function hidetable()
 		// {
 		// 	document.getElementById('mytable')..style.display = 'block';
