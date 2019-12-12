@@ -63,7 +63,7 @@ def check():
         cursor.execute("select * from stock where csymbol like '"+cmp1+"' fetch first row only")
         rows=cursor.fetchone()
         print(str(rows[4]))
-        cursor1.execute("select open,close,to_char(date,'YYYY-MM-DD') from stock where csymbol like '"+cmp1+"' order by date desc limit 5")
+        cursor1.execute("select open,close,to_char(date,'YYYY-MM-DD') from stock where csymbol like '"+cmp1+"' order by date desc limit 22")
         chartrows=cursor1.fetchall()
         openlist=[]
         closelist=[]
@@ -109,7 +109,7 @@ def check():
         cursor.execute("select * from stock where csymbol like '"+cmp2+"' fetch first row only")
         rows1=cursor.fetchone()
         
-        cursor2.execute("select open,close,to_char(date,'YYYY-MM-DD') from stock where csymbol like '"+cmp2+"' order by date desc limit 5")
+        cursor2.execute("select open,close,to_char(date,'YYYY-MM-DD') from stock where csymbol like '"+cmp2+"' order by date desc limit 22")
         chartrows1=cursor2.fetchall()
         copenlist=[]
         ccloselist=[]
