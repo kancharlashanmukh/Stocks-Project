@@ -7,7 +7,7 @@ app = Flask(__name__)
 # host = "myserverkyc.postgres.database.azure.com"
 # dbname = "kyc"
 # user = "kycadmin@myserverkyc"
-# password = "Shan12345"
+# password = "Shan12345" 
 # sslmode = "require"
 
 # # Construct connection string
